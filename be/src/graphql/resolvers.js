@@ -25,7 +25,7 @@ const setAuthCookie = (res, userId) => {
   res.cookie('token', token, {
     httpOnly: true, // Shields against XSS attacks
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 };
