@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { gql } from '@apollo/client';
+import toast from 'react-hot-toast';
 
 const GET_QUOTE = gql`
   query GetQuote($symbol: String!) {
@@ -70,15 +71,22 @@ const TradeWidget = () => {
           text: `Successfully bought ${variables.shares} shares of ${variables.symbol}!`,
           type: 'success',
         });
+        toast.success(
+          `Successfully bought ${variables.shares} shares of ${variables.symbol}! 🚀`
+        );
       } else {
         await sellStock({ variables });
         setMessage({
           text: `Successfully sold ${variables.shares} shares of ${variables.symbol}!`,
           type: 'success',
         });
+        toast.success(
+          `Successfully sold ${variables.shares} shares of ${variables.symbol}! 💰`
+        );
       }
     } catch (err) {
       setMessage({ text: err.message, type: 'error' });
+      toast.error(err.message || 'Trade failed');
     }
   };
 
