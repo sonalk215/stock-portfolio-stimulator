@@ -15,6 +15,7 @@ const startServer = async () => {
   const app = express();
 
   // Middleware
+  app.set('trust proxy', 1);
   app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
