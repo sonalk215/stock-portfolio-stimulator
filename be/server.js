@@ -14,9 +14,32 @@ const { resolvers } = require('./src/graphql/resolvers.js');
 const startServer = async () => {
   const app = express();
 
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    process.env.FRONTEND_URL, // We will add this to Render next!
+  ].filter(Boolean);
+
   // Middleware
   app.set('trust proxy', 1);
-  app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl, or Postman)
+        if (!origin) return callback(null, true);
+
+        if (
+          allowedOrigins.indexOf(origin) !== -1 ||
+          process.env.NODE_ENV !== 'production'
+        ) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+    })
+  );
   app.use(express.json());
   app.use(cookieParser());
 
