@@ -135,8 +135,10 @@ const resolvers = {
       if (!context.userId) throw new Error('You must be logged in to trade');
       if (shares <= 0) throw new Error('Shares must be greater than zero');
 
-      const livePrice = await fetchLivePrice(symbol);
-      const totalCost = shares * livePrice;
+      const rawPrice = await fetchLivePrice(symbol);
+      const livePrice = Number(rawPrice.toFixed(2));
+      const totalCost = Number((shares * livePrice).toFixed(2));
+
       const uppercaseSymbol = symbol.toUpperCase();
 
       const user = await prisma.user.findUnique({
@@ -188,9 +190,11 @@ const resolvers = {
       if (!context.userId) throw new Error('You must be logged in to trade');
       if (shares <= 0) throw new Error('Shares must be greater than zero');
 
-      const livePrice = await fetchLivePrice(symbol);
+      const rawPrice = await fetchLivePrice(symbol);
+      const livePrice = Number(rawPrice.toFixed(2));
+      const totalRevenue = Number((shares * livePrice).toFixed(2));
+
       const uppercaseSymbol = symbol.toUpperCase();
-      const totalRevenue = shares * livePrice;
 
       const holding = await prisma.holding.findUnique({
         where: {
