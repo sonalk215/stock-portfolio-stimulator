@@ -47,7 +47,7 @@ const startServer = async () => {
   // Middleware
   app.set('trust proxy', 1);
   app.use(cors(corsOptions));
-  app.options('*', cors(corsOptions)); // Handle preflight requests explicitly
+  // app.options('*', cors(corsOptions)); // Handle preflight requests explicitly
 
   app.use(express.json());
   app.use(cookieParser());
