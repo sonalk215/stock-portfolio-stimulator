@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String?  // Optional for future Google OAuth
+  googleId     String?  @unique
+  avatarUrl    String?
+  balance      Float    @default(100000.00) // $100k starting paper money
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // A User can have many transactions and holdings
+  transactions Transaction[]
+  holdings     Holding[]
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  symbol    String   // e.g., "AAPL"
+  type      TradeType 
+  shares    Int      // Number of shares bought/sold
+  price     Float
+  createdAt DateTime @default(now())
+}
+
+model Holding {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  symbol    String   // e.g., "AAPL"
+  shares    Int
+  updatedAt DateTime @updatedAt
+
+  // This ensures a user can only have ONE active holding record per company
+  // (e.g., you can't have two separate rows for Apple for the same user)
+  @@unique([userId, symbol])
+}
+
+// PostgreSQL enum to strict-type the transaction types
+enum TradeType {
+  BUY
+  SELL
+}
