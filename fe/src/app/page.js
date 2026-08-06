@@ -6,6 +6,7 @@ import { gql } from '@apollo/client';
 import { useQuery, useMutation } from '@apollo/client/react';
 
 import TradeWidget from '@/components/TradeWidget';
+import LiveTicker from '@/components/LiveTicker';
 
 // --- GRAPHQL QUERIES & MUTATIONS ---
 const GET_DASHBOARD_DATA = gql`
@@ -106,6 +107,8 @@ const Dashboard = () => {
             Sign Out
           </button>
         </header>
+
+        <LiveTicker />
 
         {/* CASH BALANCE CARD */}
         <div className="mb-10 rounded-2xl bg-slate-800 p-8 shadow-xl border border-slate-700">

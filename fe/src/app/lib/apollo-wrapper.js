@@ -6,7 +6,6 @@ import { ApolloProvider } from '@apollo/client/react';
 // Initialize Apollo Client
 const client = new ApolloClient({
   link: new HttpLink({
-    //uri: 'http://localhost:4000/graphql', // Your Express backend URL
     uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
     credentials: 'include', // CRITICAL: This tells the browser to send your JWT cookie!
   }),
